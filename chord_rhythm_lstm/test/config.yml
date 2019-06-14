@@ -1,0 +1,18 @@
+general:
+  random_seed: 3333
+
+data:
+  processed_numpy_file: '../processed_numpy/data.pkl'
+  data_augmentation: true
+
+model:
+  lstm_layers: 2
+  lstm_dim: 512
+  batch_size: 64
+  data_dim: 62
+
+hyperparams:
+  sequence_length: 100
+  batch_size: 64
+  learning_rate: 0.001
+  optimiser: 'adam'

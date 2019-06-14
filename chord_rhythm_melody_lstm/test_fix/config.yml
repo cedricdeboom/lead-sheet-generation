@@ -1,0 +1,20 @@
+general:
+  random_seed: 3333
+
+data:
+  processed_numpy_file: '../data/processed_sheets_numpy/data.pkl'
+  data_augmentation: true
+
+model:
+  num_layers_bi: 2
+  num_layers_lstm: 2
+  lstm_dim: 512
+  batch_size: 128
+  input_dim_1: 62    #chord + rhythm input
+  input_dim_2: 130   #melody input
+  output_dim: 130    #melody output
+
+hyperparams:
+  sequence_length: 100
+  learning_rate: 0.001
+  optimiser: 'adam'
