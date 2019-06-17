@@ -29,7 +29,7 @@ class LSTM(nn.Module):
         self.hidden_bi, self.hidden_lstm = self.init_hidden()
         
         # Bidirectional LSTM
-        if num_layers_bi > 0:
+        if self.num_layers_bi > 0:
             self.lstm_bi = nn.LSTM(
                 self.input_dim_1,
                 self.hidden_dim,
@@ -47,7 +47,7 @@ class LSTM(nn.Module):
             )
         
         # Second pair of LSTM layers
-        if num_layers_bi > 0:
+        if self.num_layers_bi > 0:
             self.lstm = nn.LSTM(self.hidden_dim * 2 + self.input_dim_2, self.hidden_dim, self.num_layers_lstm, batch_first=True)
         else:
             self.lstm = nn.LSTM(self.hidden_dim + self.input_dim_2, self.hidden_dim, self.num_layers_lstm, batch_first=True)
@@ -57,7 +57,7 @@ class LSTM(nn.Module):
 
     def init_hidden(self):
         # This is what we'll initialise our hidden state as
-        if num_layers_bi > 0:
+        if self.num_layers_bi > 0:
             return (
                 (torch.zeros(self.num_layers_bi * 2, self.batch_size, self.hidden_dim),
                     torch.zeros(self.num_layers_bi * 2, self.batch_size, self.hidden_dim)),
