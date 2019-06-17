@@ -7,8 +7,8 @@ import pickle
 import util
 from util import Constants
 
-DATA_DIR = 'chord_rhythm_lstm/processed_output'
-OUT_FILE = 'chord_rhythm_lstm/processed_output_numpy/data.pkl'
+DATA_DIR = 'data/processed_seeds'
+OUT_FILE = 'data/processed_seeds_numpy/data.pkl'
 DIMENSIONS = 192
 
 # SHEET SCHEMA

@@ -29,28 +29,48 @@ class LSTM(nn.Module):
         self.hidden_bi, self.hidden_lstm = self.init_hidden()
         
         # Bidirectional LSTM
-        self.lstm_bi = nn.LSTM(
-            self.input_dim_1,
-            self.hidden_dim,
-            self.num_layers_bi,
-            batch_first=True,
-            bidirectional=True
-        )
+        if num_layers_bi > 0:
+            self.lstm_bi = nn.LSTM(
+                self.input_dim_1,
+                self.hidden_dim,
+                self.num_layers_bi,
+                batch_first=True,
+                bidirectional=True
+            )
+        else:
+            self.lstm_bi = nn.LSTM(
+                self.input_dim_1,
+                self.hidden_dim,
+                self.num_layers_lstm,
+                batch_first=True,
+                bidirectional=False
+            )
         
         # Second pair of LSTM layers
-        self.lstm = nn.LSTM(self.hidden_dim * 2 + self.input_dim_2, self.hidden_dim, self.num_layers_lstm, batch_first=True)
+        if num_layers_bi > 0:
+            self.lstm = nn.LSTM(self.hidden_dim * 2 + self.input_dim_2, self.hidden_dim, self.num_layers_lstm, batch_first=True)
+        else:
+            self.lstm = nn.LSTM(self.hidden_dim + self.input_dim_2, self.hidden_dim, self.num_layers_lstm, batch_first=True)
         
         # Last dense layer
         self.dense = nn.Linear(self.hidden_dim, self.output_dim)
 
     def init_hidden(self):
         # This is what we'll initialise our hidden state as
-        return (
-            (torch.zeros(self.num_layers_bi * 2, self.batch_size, self.hidden_dim),
-                torch.zeros(self.num_layers_bi * 2, self.batch_size, self.hidden_dim)),
-            (torch.zeros(self.num_layers_lstm, self.batch_size, self.hidden_dim),
-                torch.zeros(self.num_layers_lstm, self.batch_size, self.hidden_dim))
-               )
+        if num_layers_bi > 0:
+            return (
+                (torch.zeros(self.num_layers_bi * 2, self.batch_size, self.hidden_dim),
+                    torch.zeros(self.num_layers_bi * 2, self.batch_size, self.hidden_dim)),
+                (torch.zeros(self.num_layers_lstm, self.batch_size, self.hidden_dim),
+                    torch.zeros(self.num_layers_lstm, self.batch_size, self.hidden_dim))
+                )
+        else:
+            return (
+                (torch.zeros(self.num_layers_lstm, self.batch_size, self.hidden_dim),
+                    torch.zeros(self.num_layers_lstm, self.batch_size, self.hidden_dim)),
+                (torch.zeros(self.num_layers_lstm, self.batch_size, self.hidden_dim),
+                    torch.zeros(self.num_layers_lstm, self.batch_size, self.hidden_dim))
+                )
 
     def get_bi_output(self, input_X):
         # get chord and rhythm info from input
