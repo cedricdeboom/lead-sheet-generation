@@ -157,10 +157,11 @@ class LSTM(nn.Module):
 # [191] -> barline (one-hot) (repeated) - chord
 
 class MusicDataset(Dataset):
-    def __init__(self, data_file, sequence_length, data_augmentation):
+    def __init__(self, data_file, sequence_length, data_augmentation, use_len_data=False):
         super(MusicDataset, self).__init__()
         self.sequence_length = sequence_length
         self.data_augmentation = data_augmentation
+        self.use_len_data = use_len_data
         
         with open(data_file, 'rb') as f:
             self.id_to_sheet = pickle.load(f)
@@ -197,7 +198,10 @@ class MusicDataset(Dataset):
         return (seq_input, seq_output)
                     
     def __len__(self):
-        return sys.maxsize
+        if self.use_len_data:
+            return len(self.data)
+        else:
+            return sys.maxsize
         
     def __getitem__(self, index):
         data_index = np.random.randint(0, len(self.data))

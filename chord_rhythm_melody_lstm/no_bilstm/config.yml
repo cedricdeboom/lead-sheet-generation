@@ -8,7 +8,7 @@ data:
   data_augmentation: true
 
 model:
-  num_layers_bi: 2
+  num_layers_bi: 0
   num_layers_lstm: 2
   lstm_dim: 512
   batch_size: 128

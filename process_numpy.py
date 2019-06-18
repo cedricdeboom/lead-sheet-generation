@@ -7,8 +7,10 @@ import pickle
 import util
 from util import Constants
 
-DATA_DIR = 'data/processed_seeds'
-OUT_FILE = 'data/processed_seeds_numpy/data.pkl'
+DATA_DIR = 'data/processed_sheets'
+OUT_FILE = 'data/processed_sheets_numpy/data.pkl'
+TRAIN_FRACTION = 0.95
+NP_RANDOM_SEED = 1234567890
 DIMENSIONS = 192
 
 # SHEET SCHEMA
@@ -71,6 +73,25 @@ for sheet in sorted(os.listdir(DATA_DIR)):
         print("\n", sheet, " : UNSUPPORTED ALTER IN CHORD")
 
 
+# WRITE ENTIRE DATASET
 with open(OUT_FILE, 'wb') as f:
     pickle.dump(index_to_title, f)
     pickle.dump(all_np_sheets, f)
+
+# WRITE TRAIN AND VALIDATION SET
+np.random.seed(NP_RANDOM_SEED)
+
+data_indices = np.arange(0, len(all_np_sheets))
+np.random.shuffle(data_indices)
+
+train_limit = int(len(all_np_sheets)*TRAIN_FRACTION)
+train_set = [all_np_sheets[x] for x in data_indices[:train_limit]]
+val_set = [all_np_sheets[x] for x in data_indices[train_limit:]]
+
+with open(OUT_FILE[:-4] + '_train.pkl', 'wb') as f:
+    pickle.dump({}, f)
+    pickle.dump(train_set, f)
+
+with open(OUT_FILE[:-4] + '_val.pkl', 'wb') as f:
+    pickle.dump({}, f)
+    pickle.dump(val_set, f)
