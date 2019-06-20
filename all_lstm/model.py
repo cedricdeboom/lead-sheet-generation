@@ -48,7 +48,7 @@ class LSTM(nn.Module):
                 torch.zeros(self.num_layers_lstm, self.batch_size, self.hidden_dim))
             )
 
-    def forward(self, input_X, lengths_X, max_length, temperature=1.0, propagate_hidden=False):
+    def forward(self, input_X, lengths_X, max_length, temperature=1.0):
         # Forward pass through LSTM layer
         # shape of lstm_out: [batch_size, input_size, hidden_dim]
         # shape of self.hidden: (a, b), where a and b both have shape (num_layers, batch_size, hidden_dim).
@@ -58,7 +58,7 @@ class LSTM(nn.Module):
             packed_X = torch.nn.utils.rnn.pack_padded_sequence(input_X, lengths_X, batch_first=True)
         else:
             packed_X = input_X
-        
+
         lstm_out, self.hidden = self.lstm(packed_X)
         
         if not self.inference:
@@ -121,14 +121,8 @@ class MusicDataset(Dataset):
         sequence[:, 1:128] = np.roll(sequence[:, 1:128], offset)  # melody
         sequence[:, 143:191] = np.roll(sequence[:, 143:191], offset*4)  # chord
 
-    def process_sequence(self, seq):
-        seq_chords_rhythm = seq[:, 130:]
-        seq_melody = np.vstack((self.start_token, seq[:, :130]))
-        
-        seq_input = np.hstack((seq_melody[:-1, :], seq_chords_rhythm))
-        seq_output = seq_melody[1:]
-        
-        return (seq_input, seq_output)
+    def process_sequence(self, seq):       
+        return (seq, seq[1:])
                     
     def __len__(self):
         if self.use_len_data:

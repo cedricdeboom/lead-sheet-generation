@@ -7,8 +7,8 @@ import pickle
 import util
 from util import Constants
 
-DATA_DIR = 'data/processed_sheets'
-OUT_FILE = 'data/processed_sheets_numpy/data.pkl'
+DATA_DIR = 'chord_rhythm_lstm/processed_output'
+OUT_FILE = 'chord_rhythm_lstm/processed_output_numpy/data.pkl'
 TRAIN_FRACTION = 0.95
 NP_RANDOM_SEED = 1234567890
 DIMENSIONS = 192
